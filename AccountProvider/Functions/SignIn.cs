@@ -12,11 +12,13 @@ namespace AccountProvider.Functions
     public class SignIn
     {
         private readonly ILogger<SignIn> _logger;
+        private readonly UserManager<UserAccount> _userManager;
         private readonly SignInManager<UserAccount> _signInManager;
-        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager)
+        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager)
         {
             _logger = logger;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [Function("SignIn")]
@@ -43,7 +45,8 @@ namespace AccountProvider.Functions
 
                     try
                     {
-                        var res = await _signInManager.PasswordSignInAsync(usim.Email, usim.Password, usim.RememberMe, false);
+                        var userAccount = await _userManager.FindByNameAsync(usim.Email);
+                        var res = await _signInManager.CheckPasswordSignInAsync(userAccount!, usim.Password, false);
                         if (res.Succeeded)
                         {
                             return new OkResult();
