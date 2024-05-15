@@ -49,7 +49,7 @@ namespace AccountProvider.Functions
                         var res = await _signInManager.CheckPasswordSignInAsync(userAccount!, usim.Password, false);
                         if (res.Succeeded)
                         {
-                            return new OkResult();
+                            return new OkObjectResult(res);
                         }
                         else
                         {
