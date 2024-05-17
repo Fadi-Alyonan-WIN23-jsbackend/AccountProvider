@@ -43,7 +43,7 @@ public class UpdateAddress
             catch (Exception ex) { _logger.LogError($" JsonConvert.DeserializeObject<UserAddressModel> :: {ex.Message} "); }
 
 
-            if (uam != null && !string.IsNullOrEmpty(uam.AddressLine1) && !string.IsNullOrEmpty(uam.PostalCode) && !string.IsNullOrEmpty(uam.City))
+            if (uam != null)
             {
                 var user = await _userManager.FindByIdAsync(uam.UserId);
                 if (user != null)
