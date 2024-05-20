@@ -1,4 +1,5 @@
 using AccountProvider.Models;
+using AccountProvider.Services;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,15 @@ namespace AccountProvider.Functions
         private readonly ILogger<SignIn> _logger;
         private readonly UserManager<UserAccount> _userManager;
         private readonly SignInManager<UserAccount> _signInManager;
-        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager)
+        private readonly HttpClient _httpClient;
+        private readonly GenerateToken _generateToken;
+        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, HttpClient httpClient, GenerateToken generateToken)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _httpClient = httpClient;
+            _generateToken = generateToken;
         }
 
         [Function("SignIn")]
@@ -49,7 +54,17 @@ namespace AccountProvider.Functions
                         var res = await _signInManager.CheckPasswordSignInAsync(userAccount!, usim.Password, false);
                         if (res.Succeeded)
                         {
-                            return new OkObjectResult(res);
+                            var tokenResponse = await _generateToken.GenerateTokenAsync(usim.Email, userAccount.Id);
+                            if (tokenResponse.IsSuccessStatusCode)
+                            {
+                                var token = await tokenResponse.Content.ReadAsStringAsync();
+                                return new OkObjectResult(token);
+                            }
+                            else
+                            {
+                                _logger.LogError($" TokenProvider Response :: {tokenResponse.StatusCode}");
+                                return new StatusCodeResult((int)tokenResponse.StatusCode);
+                            }
                         }
                         else
                         {

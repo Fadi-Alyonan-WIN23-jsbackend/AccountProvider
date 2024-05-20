@@ -1,3 +1,4 @@
+using AccountProvider.Services;
 using Data.Contexts;
 using Data.Entities;
 using Microsoft.Azure.Functions.Worker;
@@ -21,9 +22,10 @@ var host = new HostBuilder()
         
         
         }).AddEntityFrameworkStores<DataContext>();
-
+        services.AddHttpClient();
         services.AddAuthentication();
         services.AddAuthorization();
+        services.AddScoped<GenerateToken>();
     })
     .Build();
 
