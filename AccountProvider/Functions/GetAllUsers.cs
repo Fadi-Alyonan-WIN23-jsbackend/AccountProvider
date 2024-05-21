@@ -39,7 +39,7 @@ namespace AccountProvider.Functions
             }
             catch (Exception ex)
             {
-                _logger.LogError($" Get User Info :: {ex.Message}");
+                _logger.LogError($" Get All Users :: {ex.Message}");
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
