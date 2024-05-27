@@ -15,14 +15,12 @@ public class UserRoleUpdate
     private readonly ILogger<UserRoleUpdate> _logger;
     private readonly UserManager<UserAccount> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly DataContext _dataContext;
 
 
-    public UserRoleUpdate(ILogger<UserRoleUpdate> logger, UserManager<UserAccount> userManager, DataContext dataContext, RoleManager<IdentityRole> roleManager)
+    public UserRoleUpdate(ILogger<UserRoleUpdate> logger, UserManager<UserAccount> userManager, RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _userManager = userManager;
-        _dataContext = dataContext;
         _roleManager = roleManager;
     }
 

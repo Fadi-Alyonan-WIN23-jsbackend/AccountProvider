@@ -15,14 +15,12 @@ namespace AccountProvider.Functions
         private readonly ILogger<SignIn> _logger;
         private readonly UserManager<UserAccount> _userManager;
         private readonly SignInManager<UserAccount> _signInManager;
-        private readonly HttpClient _httpClient;
         private readonly GenerateToken _generateToken;
-        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, HttpClient httpClient, GenerateToken generateToken)
+        public SignIn(ILogger<SignIn> logger, SignInManager<UserAccount> signInManager, UserManager<UserAccount> userManager, GenerateToken generateToken)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
-            _httpClient = httpClient;
             _generateToken = generateToken;
         }
 
