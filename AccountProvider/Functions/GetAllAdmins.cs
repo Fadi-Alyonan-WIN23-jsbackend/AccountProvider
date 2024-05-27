@@ -46,7 +46,15 @@ namespace AccountProvider.Functions
                 if (adminUserIds.Any())
                 {
                     var adminUsers = await _userManager.Users
-                        .Where(u => adminUserIds.Contains(u.Id))
+                        .Where(u => adminUserIds.Contains(u.Id)).Select(u => new
+                        {
+                            u.Id,
+                            u.FirstName,
+                            u.LastName,
+                            u.Email,
+                            u.PhoneNumber,
+                            Role = "admin"
+                        })
                         .ToListAsync();
 
                     var json = JsonConvert.SerializeObject(adminUsers);
