@@ -1,6 +1,7 @@
 using AccountProvider.Services;
 using Data.Contexts;
 using Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,12 +17,12 @@ var host = new HostBuilder()
 
         services.AddDbContext<DataContext>(x => x.UseSqlServer(context.Configuration.GetConnectionString("Accountdb")));
 
-        services.AddDefaultIdentity<UserAccount>(x => { 
-            x.User.RequireUniqueEmail = true;
-            x.Password.RequiredLength = 8;
-        
-        
-        }).AddEntityFrameworkStores<DataContext>();
+        services.AddIdentity<UserAccount, IdentityRole>(options => {
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequiredLength = 8;
+        }).AddEntityFrameworkStores<DataContext>()
+        .AddDefaultTokenProviders();
+
         services.AddHttpClient();
         services.AddAuthentication();
         services.AddAuthorization();
